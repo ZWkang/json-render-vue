@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Spec } from 'json-render-vue'
 import { useDataBinding } from 'json-render-vue'
-import { Input as TInput } from 'tdesign-vue-next'
+import { type InputValue, Input as TInput } from 'tdesign-vue-next'
 
 const props = defineProps<{
   element: Spec
@@ -16,7 +16,7 @@ const value = useDataBinding<string | number>(props.element.props?.valuePath ?? 
       {{ element.props?.label }}
     </label>
     <TInput
-      v-model="value as InputValue"
+      v-model="value as unknown as InputValue"
       :placeholder="element.props?.placeholder"
       :type="element.props?.type || 'text'"
       :disabled="element.props?.disabled"
