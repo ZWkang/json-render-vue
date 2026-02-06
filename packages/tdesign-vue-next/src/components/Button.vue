@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useActions, type Spec } from 'json-render-vue'
+import { type Spec, useActions } from 'json-render-vue'
 import { Button as TButton } from 'tdesign-vue-next'
 
 const props = defineProps<{

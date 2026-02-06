@@ -93,7 +93,7 @@ describe('useData composable', () => {
   })
 
   describe('useDataBinding', () => {
-    it('returns value and setter tuple', () => {
+    it('returns writable computed ref', () => {
       let binding: any
 
       const TestComponent = createProviderComponent(
@@ -105,10 +105,8 @@ describe('useData composable', () => {
       )
 
       mount(TestComponent)
-      const [value, setValue] = binding
 
-      expect(value.value).toBe('test@example.com')
-      expect(typeof setValue).toBe('function')
+      expect(binding.value).toBe('test@example.com')
     })
 
     it('setter updates the data store', async () => {
@@ -125,10 +123,9 @@ describe('useData composable', () => {
       )
 
       mount(TestComponent)
-      const [value, setValue] = binding
 
-      expect(value.value).toBe(0)
-      setValue(42)
+      expect(binding.value).toBe(0)
+      binding.value = 42
       await nextTick()
       expect(dataStore.value.count).toBe(42)
     })
@@ -147,9 +144,8 @@ describe('useData composable', () => {
       )
 
       mount(TestComponent)
-      const [, setValue] = binding
 
-      setValue('created')
+      binding.value = 'created'
       await nextTick()
       expect(dataStore.value.deeply.nested.value).toBe('created')
     })

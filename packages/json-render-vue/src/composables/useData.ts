@@ -1,4 +1,4 @@
-import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import type { ComputedRef, InjectionKey, Ref, WritableComputedRef } from 'vue'
 import { computed, inject, provide, ref } from 'vue'
 
 export type JsonRenderData = Record<string, any>
@@ -148,19 +148,21 @@ export function useDataValue<T = any>(path: string): ComputedRef<T> {
   return computed(() => getAt(data.value, path) as T)
 }
 
-export function useDataBinding<T = any>(
-  path: string,
-): [ComputedRef<T>, (newValue: T) => void] {
+/**
+ * Returns a writable computed ref bound to a path in the data store.
+ * Supports v-model directly: `v-model="binding"`
+ */
+export function useDataBinding<T = any>(path: string): WritableComputedRef<T> {
   const data = useData()
 
-  const valueRef = computed(() => getAt(data.value, path) as T)
-  const setValue = (newValue: T) => {
-    if (!path) {
-      data.value = newValue as any
-      return
-    }
-    setAt(data.value, path, newValue)
-  }
-
-  return [valueRef, setValue]
+  return computed<T>({
+    get: () => getAt(data.value, path) as T,
+    set: (newValue: T) => {
+      if (!path) {
+        data.value = newValue as any
+        return
+      }
+      setAt(data.value, path, newValue)
+    },
+  })
 }
