@@ -1,0 +1,74 @@
+{
+  "name": "json-render-vue",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@8.15.8",
+  "description": "Vue 3 implementation of json-render framework",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "zwkang",
+    "email": "kang95630@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZWkang/json-render-vue"
+  },
+  "bugs": "https://github.com/ZWkang/json-render-vue/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/json-render-vue.js"
+    }
+  },
+  "main": "./dist/json-render-vue.js",
+  "module": "./dist/json-render-vue.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "build": "vite build",
+    "start": "tsx src/index.ts",
+    "release": "npm publish",
+    "bump:version": "bumpp",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "update:deps": "taze major -lr"
+  },
+  "peerDependencies": {
+    "vue": ">=3.3.0"
+  },
+  "dependencies": {
+    "@json-render/core": "^0.2.0",
+    "@vueuse/core": "^14.2.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.16.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "bumpp": "^9.4.1",
+    "eslint": "^9.1.1",
+    "taze": "^0.13.7",
+    "tsup": "^8.0.2",
+    "tsx": "^4.7.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vite-plugin-dts": "^3.9.0",
+    "vitest": "^1.5.3"
+  }
+}

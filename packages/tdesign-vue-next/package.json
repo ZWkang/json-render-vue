@@ -1,0 +1,59 @@
+{
+  "name": "@json-render/tdesign-vue-next",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@8.15.8",
+  "description": "TDesign Vue Next components for json-render-vue",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "zwkang",
+    "email": "kang95630@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZWkang/json-render-vue"
+  },
+  "bugs": "https://github.com/ZWkang/json-render-vue/issues",
+  "keywords": ["json-render", "tdesign", "vue3", "ui"],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite build --watch",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "tdesign-vue-next": ">=1.0.0",
+    "vue": ">=3.3.0"
+  },
+  "dependencies": {
+    "json-render-vue": "workspace:*"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.16.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "eslint": "^9.1.1",
+    "tdesign-vue-next": "^1.10.6",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vite-plugin-dts": "^3.9.0",
+    "vitest": "^1.5.3"
+  }
+}

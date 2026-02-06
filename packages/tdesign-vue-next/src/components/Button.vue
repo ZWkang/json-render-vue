@@ -1,0 +1,33 @@
+<script setup lang="ts">
+import type { Action, UIElement } from 'json-render-vue'
+import { Button as TButton } from 'tdesign-vue-next'
+
+const props = defineProps<{
+  element: UIElement
+  loading?: boolean
+}>()
+
+const emit = defineEmits<{
+  action: [action: Action]
+}>()
+
+function handleClick() {
+  if (props.element.props.action) {
+    emit('action', { name: props.element.props.action })
+  }
+}
+</script>
+
+<template>
+  <TButton
+    :theme="element.props.theme || 'default'"
+    :variant="element.props.variant || 'base'"
+    :size="element.props.size || 'medium'"
+    :disabled="element.props.disabled || loading"
+    :loading="element.props.loading || loading"
+    :block="element.props.block"
+    @click="handleClick"
+  >
+    {{ element.props.label }}
+  </TButton>
+</template>
