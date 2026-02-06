@@ -17,7 +17,12 @@
     "url": "https://github.com/ZWkang/json-render-vue"
   },
   "bugs": "https://github.com/ZWkang/json-render-vue/issues",
-  "keywords": ["json-render", "tdesign", "vue3", "ui"],
+  "keywords": [
+    "json-render",
+    "tdesign",
+    "vue3",
+    "ui"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {
@@ -44,7 +49,9 @@
     "vue": ">=3.3.0"
   },
   "dependencies": {
-    "json-render-vue": "workspace:*"
+    "@json-render/core": "^0.2.0",
+    "json-render-vue": "workspace:*",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.16.0",

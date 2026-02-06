@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { UIElement } from 'json-render-vue'
+import type { Spec } from 'json-render-vue'
 import { useDataBinding } from 'json-render-vue'
 import { Input as TInput } from 'tdesign-vue-next'
 
 const props = defineProps<{
-  element: UIElement
+  element: Spec
 }>()
 
-const [value, setValue] = useDataBinding<string>(props.element.props.valuePath)
+const [value, setValue] = useDataBinding<string>(props.element.props?.valuePath || '')
 </script>
 
 <template>

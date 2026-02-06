@@ -1,4 +1,4 @@
-import { createCatalog } from 'json-render-vue'
+import { createCatalog } from '@json-render/core'
 import { z } from 'zod'
 
 /**

@@ -1,6 +1,8 @@
 import { assert, it } from 'vitest'
-import { name } from '../src'
+import { tdesignRegistry, tdesignCatalog } from '../src'
 
-it('simple', () => {
-  assert.equal(name, 'pkg-name')
+it('exports registry and catalog', () => {
+  assert.ok(tdesignRegistry)
+  assert.ok(tdesignCatalog)
+  assert.ok(tdesignRegistry.Card)
 })

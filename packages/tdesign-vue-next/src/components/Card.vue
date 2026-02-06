@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { UIElement } from 'json-render-vue'
+import type { Spec } from 'json-render-vue'
 import { Card as TCard } from 'tdesign-vue-next'
 
 defineProps<{
-  element: UIElement
+  element: Spec
 }>()
 </script>
 

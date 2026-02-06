@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@json-render/core':
         specifier: 0.4.0
-        version: 0.4.0(zod@4.3.5)
+        version: 0.4.0(zod@4.3.6)
       taze:
         specifier: ^19.9.2
         version: 19.9.2
@@ -47,7 +47,7 @@ importers:
     dependencies:
       '@json-render/core':
         specifier: ^0.2.0
-        version: 0.2.0(zod@4.3.5)
+        version: 0.2.0(zod@4.3.6)
       '@vueuse/core':
         specifier: ^14.2.0
         version: 14.2.0(vue@3.5.26(typescript@5.9.3))
@@ -91,12 +91,18 @@ importers:
 
   packages/tdesign-vue-next:
     dependencies:
+      '@json-render/core':
+        specifier: ^0.2.0
+        version: 0.2.0(zod@4.3.6)
       json-render-vue:
         specifier: workspace:*
         version: link:../json-render-vue
       vue:
         specifier: '>=3.3.0'
         version: 3.5.26(typescript@5.9.3)
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^2.16.0
@@ -4248,8 +4254,8 @@ packages:
     engines: {node: '>=8.0.0'}
     hasBin: true
 
-  zod@4.3.5:
-    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
   zwkang-prettier-config@0.0.3:
     resolution: {integrity: sha512-q7Lx4zsu6KwtxKzx8X66RwuAujKLOMLQu91e5+Dg2QjPBGWvLlSZ7lyCdW1TVAO5Ye7wU+epnIeI2SrVtC946g==}
@@ -4950,13 +4956,13 @@ snapshots:
       string-argv: 0.3.2
       type-detect: 4.0.8
 
-  '@json-render/core@0.2.0(zod@4.3.5)':
+  '@json-render/core@0.2.0(zod@4.3.6)':
     dependencies:
-      zod: 4.3.5
+      zod: 4.3.6
 
-  '@json-render/core@0.4.0(zod@4.3.5)':
+  '@json-render/core@0.4.0(zod@4.3.6)':
     dependencies:
-      zod: 4.3.5
+      zod: 4.3.6
 
   '@microsoft/api-extractor-model@7.28.13(@types/node@20.10.0)':
     dependencies:
@@ -8418,6 +8424,6 @@ snapshots:
     optionalDependencies:
       commander: 9.5.0
 
-  zod@4.3.5: {}
+  zod@4.3.6: {}
 
   zwkang-prettier-config@0.0.3: {}

@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import type { Action, UIElement } from 'json-render-vue'
+import { useActions, type Spec } from 'json-render-vue'
 import { Button as TButton } from 'tdesign-vue-next'
 
 const props = defineProps<{
-  element: UIElement
+  element: Spec
   loading?: boolean
 }>()
 
-const emit = defineEmits<{
-  action: [action: Action]
-}>()
+const { execute } = useActions()
 
 function handleClick() {
-  if (props.element.props.action) {
-    emit('action', { name: props.element.props.action })
+  if (props.element.props?.action) {
+    execute({ type: props.element.props.action })
   }
 }
 </script>
