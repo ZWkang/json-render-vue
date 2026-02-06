@@ -7,7 +7,7 @@ const props = defineProps<{
   element: Spec
 }>()
 
-const value = useDataBinding<string>(props.element.props?.valuePath ?? '')
+const value = useDataBinding<string | number>(props.element.props?.valuePath ?? '')
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const value = useDataBinding<string>(props.element.props?.valuePath ?? '')
       {{ element.props?.label }}
     </label>
     <TInput
-      v-model="value"
+      v-model="value as InputValue"
       :placeholder="element.props?.placeholder"
       :type="element.props?.type || 'text'"
       :disabled="element.props?.disabled"

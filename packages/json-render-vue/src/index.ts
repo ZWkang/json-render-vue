@@ -1,4 +1,5 @@
 export * from './types/catalog-types'
+export type { RendererProps } from './types/renderer-types'
 
 export { default as Renderer } from './components/Renderer.vue'
 export { default as JSONUIProvider } from './components/JSONUIProvider.vue'
