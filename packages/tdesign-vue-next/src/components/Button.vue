@@ -18,14 +18,14 @@ function handleClick() {
 
 <template>
   <TButton
-    :theme="element.props.theme || 'default'"
-    :variant="element.props.variant || 'base'"
-    :size="element.props.size || 'medium'"
-    :disabled="element.props.disabled || loading"
-    :loading="element.props.loading || loading"
-    :block="element.props.block"
+    :theme="element.props?.theme || 'default'"
+    :variant="element.props?.variant || 'base'"
+    :size="element.props?.size || 'medium'"
+    :disabled="element.props?.disabled || loading"
+    :loading="element.props?.loading || loading"
+    :block="element.props?.block"
     @click="handleClick"
   >
-    {{ element.props.label }}
+    {{ element.props?.label }}
   </TButton>
 </template>

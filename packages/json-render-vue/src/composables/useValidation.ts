@@ -1,7 +1,7 @@
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
 import { computed, inject, provide, ref } from 'vue'
 
-import { useData } from './useData'
+import type { JsonRenderDataStore } from './useData'
 
 export type Validator = (value: any) => string | null
 
@@ -116,7 +116,7 @@ function getAt(root: any, path: string): any {
   return cur
 }
 
-export function provideValidation(): ValidationContext {
+export function provideValidation(dataStore?: JsonRenderDataStore): ValidationContext {
   const errors = ref<Record<string, string | null>>({})
   const validators = new Map<string, Validator>()
 
@@ -130,8 +130,7 @@ export function provideValidation(): ValidationContext {
   }
 
   const validateAll = () => {
-    const data = useData()
-    const root = data.value
+    const root = dataStore?.value ?? {}
 
     const nextErrors: Record<string, string | null> = {}
     let valid = true

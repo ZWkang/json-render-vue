@@ -1,7 +1,7 @@
 import { computed, toValue } from 'vue'
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 
-import { useDataValue } from './useData'
+import { useData } from './useData'
 
 type VisibilityOperator =
   | 'eq'
@@ -13,10 +13,111 @@ type VisibilityOperator =
   | 'in'
   | 'contains'
 
-type VisibilityCondition = {
+interface VisibilityCondition {
   path?: unknown
   value?: any
   operator?: unknown
+}
+
+type PathSegment = string | number
+
+function parsePath(path: string): PathSegment[] {
+  const segments: PathSegment[] = []
+  let cur = ''
+  let i = 0
+
+  const pushCur = () => {
+    if (cur.length > 0) {
+      segments.push(cur)
+      cur = ''
+    }
+  }
+
+  while (i < path.length) {
+    const ch = path[i]
+
+    if (ch === '.') {
+      pushCur()
+      i += 1
+      continue
+    }
+
+    if (ch === '[') {
+      pushCur()
+      i += 1
+
+      while (i < path.length && path[i] === ' ')
+        i += 1
+
+      const quote = path[i]
+      if (quote === '"' || quote === '\'') {
+        i += 1
+        let s = ''
+        while (i < path.length) {
+          const c = path[i]
+          if (c === '\\') {
+            if (i + 1 < path.length) {
+              s += path[i + 1]
+              i += 2
+              continue
+            }
+          }
+          if (c === quote) {
+            i += 1
+            break
+          }
+          s += c
+          i += 1
+        }
+
+        while (i < path.length && path[i] === ' ')
+          i += 1
+        if (path[i] === ']')
+          i += 1
+
+        segments.push(s)
+        continue
+      }
+
+      let inner = ''
+      while (i < path.length && path[i] !== ']') {
+        inner += path[i]
+        i += 1
+      }
+      if (path[i] === ']')
+        i += 1
+
+      inner = inner.trim()
+      if (inner.length === 0)
+        continue
+
+      if (/^-?\d+$/.test(inner))
+        segments.push(Number(inner))
+      else
+        segments.push(inner)
+
+      continue
+    }
+
+    cur += ch
+    i += 1
+  }
+
+  pushCur()
+  return segments
+}
+
+function getAt(root: any, path: string): any {
+  if (!path)
+    return root
+  const segments = parsePath(path)
+  let cur: any = root
+  for (const seg of segments) {
+    if (cur == null)
+      return undefined
+    cur = cur[seg as any]
+  }
+  return cur
 }
 
 function opIn(current: any, expected: any): boolean {
@@ -69,6 +170,9 @@ function evalCondition(operator: VisibilityOperator, current: any, expected: any
 export function useIsVisible(
   condition: MaybeRefOrGetter<boolean | Record<string, any> | undefined>,
 ): ComputedRef<boolean> {
+  // Get data store reference at setup time, not inside computed
+  const dataStore = useData()
+
   return computed(() => {
     const resolved = toValue(condition) as any
 
@@ -88,7 +192,7 @@ export function useIsVisible(
       return true
 
     const operator = (c.operator ?? 'eq') as VisibilityOperator
-    const current = useDataValue<any>(path).value
+    const current = getAt(dataStore.value, path)
     return evalCondition(operator, current, c.value)
   })
 }

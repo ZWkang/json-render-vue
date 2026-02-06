@@ -9,11 +9,11 @@ defineProps<{
 
 <template>
   <TCard
-    :title="element.props.title"
-    :subtitle="element.props.subtitle"
-    :bordered="element.props.bordered ?? true"
-    :shadow="element.props.shadow"
-    :hoverable="element.props.hoverable"
+    :title="element.props?.title"
+    :subtitle="element.props?.subtitle"
+    :bordered="element.props?.bordered ?? true"
+    :shadow="element.props?.shadow"
+    :hoverable="element.props?.hoverable"
   >
     <slot />
   </TCard>

@@ -1,4 +1,4 @@
-import type { ComponentRegistry } from 'json-render-vue'
+import type { Component } from 'vue'
 import Card from './components/Card.vue'
 import Button from './components/Button.vue'
 import Input from './components/Input.vue'
@@ -6,7 +6,7 @@ import Input from './components/Input.vue'
 /**
  * TDesign Vue Next component registry for json-render
  */
-export const tdesignRegistry: ComponentRegistry = {
+export const tdesignRegistry: Record<string, Component> = {
   Card,
   Button,
   Input,

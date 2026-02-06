@@ -46,7 +46,6 @@ function getChildKey(child: Spec, index: number) {
     v-if="resolvedComponent"
     v-bind="elementBind"
     :element="element"
-    :children="element.children"
   >
     <template v-if="childrenArray.length">
       <ElementRenderer
