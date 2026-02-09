@@ -1,8 +1,10 @@
 <p align="center">
+  <a href="https://github.com/ZWkang/json-render-vue/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/ZWkang/json-render-vue/test.yml?branch=main&style=flat-square&logo=github&label=tests" alt="Tests"></a>
+  <a href="https://github.com/ZWkang/json-render-vue/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/ZWkang/json-render-vue/release.yml?style=flat-square&logo=github&label=release" alt="Release"></a>
+  <a href="https://www.npmjs.com/package/json-render-vue"><img src="https://img.shields.io/npm/v/json-render-vue?style=flat-square&color=cb3837&logo=npm" alt="npm"></a>
   <img src="https://img.shields.io/badge/Vue-3.3+-42b883?style=flat-square&logo=vue.js" alt="Vue 3.3+">
   <img src="https://img.shields.io/badge/TypeScript-5.0+-3178c6?style=flat-square&logo=typescript" alt="TypeScript">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License">
-  <img src="https://img.shields.io/npm/v/json-render-vue?style=flat-square&color=cb3837&logo=npm" alt="npm">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License"></a>
 </p>
 
 <h1 align="center">🎨 json-render-vue</h1>
@@ -39,7 +41,7 @@
 pnpm add json-render-vue
 
 # TDesign component bindings (optional)
-pnpm add @zwkang-dev/tdesign-vue-next
+pnpm add @zwkang-dev/json-render-tdesign-vue-next
 ```
 
 ---
@@ -49,7 +51,7 @@ pnpm add @zwkang-dev/tdesign-vue-next
 ```vue
 <script setup lang="ts">
 import { Renderer } from 'json-render-vue'
-import { tdesignRegistry } from '@zwkang-dev/tdesign-vue-next'
+import { tdesignRegistry } from '@zwkang-dev/json-render-tdesign-vue-next'
 
 const spec = {
   type: 'Card',
@@ -185,7 +187,7 @@ const customRegistry: Record<string, Component> = {
 Pre-built registry for [TDesign Vue Next](https://tdesign.tencent.com/vue-next/):
 
 ```ts
-import { tdesignRegistry } from '@zwkang-dev/tdesign-vue-next'
+import { tdesignRegistry } from '@zwkang-dev/json-render-tdesign-vue-next'
 
 // Available: Card, Button, Input
 ```
@@ -196,8 +198,14 @@ import { tdesignRegistry } from '@zwkang-dev/tdesign-vue-next'
 
 | Package | Description | Status |
 |---------|-------------|--------|
-| `json-render-vue` | Core Vue 3 rendering framework | ✅ Stable |
-| `@zwkang-dev/tdesign-vue-next` | TDesign Vue Next bindings | 🚧 Beta |
+| [`json-render-vue`](https://www.npmjs.com/package/json-render-vue) | Core Vue 3 rendering framework | ✅ Stable |
+| [`@zwkang-dev/json-render-tdesign-vue-next`](https://www.npmjs.com/package/@zwkang-dev/json-render-tdesign-vue-next) | TDesign Vue Next bindings | 🚧 Beta |
+
+---
+
+## 📋 Changelog
+
+See [GitHub Releases](https://github.com/ZWkang/json-render-vue/releases) for the changelog.
 
 ---
 
@@ -210,6 +218,23 @@ pnpm test             # Run tests
 pnpm lint             # Lint codebase
 pnpm typecheck        # TypeScript type checking
 ```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Please make sure to:
+- Run `pnpm test` before submitting
+- Follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages
+- Update documentation if needed
 
 ---
 

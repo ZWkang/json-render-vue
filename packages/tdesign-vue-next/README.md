@@ -1,11 +1,11 @@
-# @zwkang-dev/tdesign-vue-next
+# @zwkang-dev/json-render-tdesign-vue-next
 
 TDesign Vue Next components for json-render-vue framework.
 
 ## Installation
 
 ```bash
-pnpm add @zwkang-dev/tdesign-vue-next tdesign-vue-next
+pnpm add @zwkang-dev/json-render-tdesign-vue-next tdesign-vue-next
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ pnpm add @zwkang-dev/tdesign-vue-next tdesign-vue-next
 ```vue
 <script setup lang="ts">
 import { Renderer, JSONUIProvider } from 'json-render-vue'
-import { tdesignRegistry, tdesignCatalog } from '@zwkang-dev/tdesign-vue-next'
+import { tdesignRegistry, tdesignCatalog } from '@zwkang-dev/json-render-tdesign-vue-next'
 import 'tdesign-vue-next/es/style/index.css'
 
 const tree = {
@@ -98,7 +98,7 @@ Use the `tdesignCatalog` to generate AI prompts:
 
 ```typescript
 import { generateCatalogPrompt } from 'json-render-vue'
-import { tdesignCatalog } from '@zwkang-dev/tdesign-vue-next'
+import { tdesignCatalog } from '@zwkang-dev/json-render-tdesign-vue-next'
 
 const prompt = generateCatalogPrompt(tdesignCatalog)
 console.log(prompt)

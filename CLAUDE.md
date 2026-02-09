@@ -47,7 +47,7 @@ pnpm test             # Run package tests with vitest
 
 **Path Syntax:** Data paths support dot notation and bracket access: `user.name`, `items[0].id`, `data["key"]`
 
-### @zwkang-dev/tdesign-vue-next Package
+### @zwkang-dev/json-render-tdesign-vue-next Package
 
 Provides `tdesignRegistry` - a component registry mapping type names to TDesign components (Card, Button, Input). Uses `catalog.ts` for component metadata.
 
