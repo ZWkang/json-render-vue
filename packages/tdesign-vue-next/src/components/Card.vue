@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import type { Spec } from 'json-render-vue'
-import { Card as TCard } from 'tdesign-vue-next'
+import { computed } from "vue"
+import type { UIElement } from "json-render-vue"
+import { Card as TCard } from "tdesign-vue-next"
 
-defineProps<{
-  element: Spec
+const props = defineProps<{
+  element: UIElement
 }>()
+
+const elementProps = computed(() => (props.element.props ?? {}) as Record<string, unknown>)
 </script>
 
 <template>
   <TCard
-    :title="element.props?.title"
-    :subtitle="element.props?.subtitle"
-    :bordered="element.props?.bordered ?? true"
-    :shadow="element.props?.shadow"
-    :hoverable="element.props?.hoverable"
+    :title="elementProps.title as any"
+    :subtitle="elementProps.subtitle as any"
+    :bordered="elementProps.bordered as boolean | undefined"
+    :shadow="elementProps.shadow as boolean | undefined"
+    :hoverable="elementProps.hoverable as boolean | undefined"
   >
     <slot />
   </TCard>

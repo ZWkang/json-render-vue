@@ -107,7 +107,9 @@ const emit = (eventName: string) => {
 
   const bindings = Array.isArray(binding) ? binding : [binding]
   for (const b of bindings) {
-    execute(b)
+    void execute(b).catch((err) => {
+      console.error("json-render action execution failed:", err)
+    })
   }
 }
 

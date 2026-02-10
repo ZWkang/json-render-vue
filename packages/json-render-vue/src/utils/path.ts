@@ -1,18 +1,65 @@
 /**
- * Path utilities for accessing nested object properties
- * Supports dot notation and bracket access: user.name, items[0].id, data["key"]
+ * Path utilities for accessing nested object properties.
+ *
+ * Supported formats:
+ * - Dot/bracket path: user.name, items[0].id, data["key"]
+ * - JSON Pointer: /user/name, /items/0/id
  */
 
 export type PathSegment = string | number
 
+function decodePointerToken(token: string): string {
+  return token.replace(/~1/g, '/').replace(/~0/g, '~')
+}
+
+function isIdentifier(token: string): boolean {
+  return /^[$A-Z_][\w$]*$/i.test(token)
+}
+
+/**
+ * Normalize JSON Pointer paths to dot/bracket format.
+ * Non-pointer paths are returned as-is.
+ */
+function normalizePath(path: string): string {
+  if (!path || !path.startsWith('/'))
+    return path
+
+  const tokens = path
+    .split('/')
+    .slice(1)
+    .map(decodePointerToken)
+
+  if (tokens.length === 0)
+    return ''
+
+  let normalized = ''
+  for (const token of tokens) {
+    if (/^-?\d+$/.test(token)) {
+      normalized += `[${token}]`
+      continue
+    }
+
+    if (isIdentifier(token)) {
+      normalized += normalized ? `.${token}` : token
+      continue
+    }
+
+    normalized += `[${JSON.stringify(token)}]`
+  }
+
+  return normalized
+}
+
 /**
  * Parse a path string into segments
  * Examples:
- *   "user.name" → ["user", "name"]
- *   "items[0].id" → ["items", 0, "id"]
- *   "data['key']" → ["data", "key"]
+ *   "user.name" -> ["user", "name"]
+ *   "items[0].id" -> ["items", 0, "id"]
+ *   "data['key']" -> ["data", "key"]
+ *   "/user/name" -> ["user", "name"]
  */
 export function parsePath(path: string): PathSegment[] {
+  const normalizedPath = normalizePath(path)
   const segments: PathSegment[] = []
   let cur = ''
   let i = 0
@@ -24,8 +71,8 @@ export function parsePath(path: string): PathSegment[] {
     }
   }
 
-  while (i < path.length) {
-    const ch = path[i]
+  while (i < normalizedPath.length) {
+    const ch = normalizedPath[i]
 
     if (ch === '.') {
       pushCur()
@@ -38,19 +85,19 @@ export function parsePath(path: string): PathSegment[] {
       i += 1
 
       // Skip whitespace
-      while (i < path.length && path[i] === ' ')
+      while (i < normalizedPath.length && normalizedPath[i] === ' ')
         i += 1
 
-      const quote = path[i]
+      const quote = normalizedPath[i]
       if (quote === '"' || quote === '\'') {
         // Quoted string key
         i += 1
         let s = ''
-        while (i < path.length) {
-          const c = path[i]
+        while (i < normalizedPath.length) {
+          const c = normalizedPath[i]
           if (c === '\\') {
-            if (i + 1 < path.length) {
-              s += path[i + 1]
+            if (i + 1 < normalizedPath.length) {
+              s += normalizedPath[i + 1]
               i += 2
               continue
             }
@@ -64,9 +111,9 @@ export function parsePath(path: string): PathSegment[] {
         }
 
         // Skip whitespace and closing bracket
-        while (i < path.length && path[i] === ' ')
+        while (i < normalizedPath.length && normalizedPath[i] === ' ')
           i += 1
-        if (path[i] === ']')
+        if (normalizedPath[i] === ']')
           i += 1
 
         segments.push(s)
@@ -75,11 +122,11 @@ export function parsePath(path: string): PathSegment[] {
 
       // Numeric index or unquoted key
       let inner = ''
-      while (i < path.length && path[i] !== ']') {
-        inner += path[i]
+      while (i < normalizedPath.length && normalizedPath[i] !== ']') {
+        inner += normalizedPath[i]
         i += 1
       }
-      if (path[i] === ']')
+      if (normalizedPath[i] === ']')
         i += 1
 
       inner = inner.trim()

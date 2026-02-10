@@ -21,11 +21,13 @@
   },
   "include": [
     "./*.ts",
-    "./packages/**/*.ts"
+    "./*.d.ts",
+    "./packages/**/*.ts",
+    "./packages/**/*.d.ts"
   ],
   "exclude": [
     "**/dist/",
     "node_modules",
-    "*.md",
+    "*.md"
   ]
 }

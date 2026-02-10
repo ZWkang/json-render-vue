@@ -159,10 +159,11 @@ describe('useActions composable', () => {
       )
 
       mount(TestComponent)
-      ctx.execute({ action: 'delete', confirm: { title: 'Confirm', message: 'Sure?' } })
+      const pending = ctx.execute({ action: 'delete', confirm: { title: 'Confirm', message: 'Sure?' } }).catch(() => {})
       await nextTick()
 
       ctx.cancel()
+      await pending
       await nextTick()
 
       expect(onAction).not.toHaveBeenCalled()

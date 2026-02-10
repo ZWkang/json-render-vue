@@ -76,6 +76,21 @@ describe('useData composable', () => {
       expect(itemValue.value).toBe('banana')
     })
 
+    it('supports JSON Pointer paths', () => {
+      let nameValue: any
+
+      const TestComponent = createProviderComponent(
+        { user: { name: 'Alice' } },
+        () => {
+          nameValue = useDataValue('/user/name')
+          return {}
+        },
+      )
+
+      mount(TestComponent)
+      expect(nameValue.value).toBe('Alice')
+    })
+
     it('returns undefined for non-existent path', () => {
       let value: any
 
@@ -139,6 +154,26 @@ describe('useData composable', () => {
         () => {
           dataStore = useData()
           binding = useDataBinding('deeply.nested.value')
+          return {}
+        },
+      )
+
+      mount(TestComponent)
+
+      binding.value = 'created'
+      await nextTick()
+      expect(dataStore.value.deeply.nested.value).toBe('created')
+    })
+
+    it('writes using JSON Pointer paths', async () => {
+      let dataStore: any
+      let binding: any
+
+      const TestComponent = createProviderComponent(
+        {},
+        () => {
+          dataStore = useData()
+          binding = useDataBinding('/deeply/nested/value')
           return {}
         },
       )

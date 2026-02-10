@@ -1,28 +1,37 @@
 <script setup lang="ts">
-import type { Spec } from 'json-render-vue'
-import { useDataBinding } from 'json-render-vue'
-import { type InputValue, Input as TInput } from 'tdesign-vue-next'
+import { computed } from "vue"
+import type { InputValue } from "tdesign-vue-next"
+import { Input as TInput } from "tdesign-vue-next"
+import type { UIElement } from "json-render-vue"
+import { useDataBinding } from "json-render-vue"
 
 const props = defineProps<{
-  element: Spec
+  element: UIElement
 }>()
 
-const value = useDataBinding<string | number>(props.element.props?.valuePath ?? '')
+const elementProps = computed(() => (props.element.props ?? {}) as Record<string, unknown>)
+const path = computed(() => String(elementProps.value.valuePath ?? ""))
+const rawValue = useDataBinding<InputValue>(path.value)
+
+const value = computed<InputValue>({
+  get: () => rawValue.value,
+  set: v => (rawValue.value = v),
+})
 </script>
 
 <template>
   <div class="tdesign-input-wrapper">
-    <label v-if="element.props?.label" class="tdesign-input-label">
-      {{ element.props?.label }}
+    <label v-if="elementProps.label" class="tdesign-input-label">
+      {{ elementProps.label }}
     </label>
     <TInput
-      v-model="value as unknown as InputValue"
-      :placeholder="element.props?.placeholder"
-      :type="element.props?.type || 'text'"
-      :disabled="element.props?.disabled"
-      :clearable="element.props?.clearable"
-      :maxlength="element.props?.maxlength"
-      :show-word-limit="element.props?.showWordLimit"
+      v-model="value"
+      :placeholder="elementProps.placeholder as string | undefined"
+      :type="(elementProps.type as any) || 'text'"
+      :disabled="Boolean(elementProps.disabled)"
+      :clearable="Boolean(elementProps.clearable)"
+      :maxlength="elementProps.maxlength as string | number | undefined"
+      :show-word-limit="Boolean(elementProps.showWordLimit)"
     />
   </div>
 </template>

@@ -1,4 +1,4 @@
-import { onUnmounted, ref, shallowRef } from 'vue'
+import { getCurrentInstance, onUnmounted, ref, shallowRef } from 'vue'
 import type { Ref, ShallowRef } from 'vue'
 
 import type { FlatElement, JsonPatch, Spec, TokenUsage, UIElement } from '../types/catalog-types'
@@ -88,7 +88,7 @@ function setSpecValue(spec: Spec, path: string, value: unknown): void {
   if (path.startsWith('/state/')) {
     if (!spec.state) spec.state = {}
     const statePath = path.slice('/state'.length)
-    setAt(spec.state, statePath.replace(/^\//, '').replace(/\//g, '.'), value)
+    setAt(spec.state, statePath, value)
     return
   }
 
@@ -118,7 +118,7 @@ function removeSpecValue(spec: Spec, path: string): void {
 
   if (path.startsWith('/state/') && spec.state) {
     const statePath = path.slice('/state'.length)
-    removeAt(spec.state, statePath.replace(/^\//, '').replace(/\//g, '.'))
+    removeAt(spec.state, statePath)
     return
   }
 
@@ -145,7 +145,7 @@ function getSpecValue(spec: Spec, path: string): unknown {
   if (path === '/state') return spec.state
   if (path.startsWith('/state/') && spec.state) {
     const statePath = path.slice('/state'.length)
-    return getAt(spec.state, statePath.replace(/^\//, '').replace(/\//g, '.'))
+    return getAt(spec.state, statePath)
   }
   if (path.startsWith('/elements/')) {
     const pathParts = path.slice('/elements/'.length).split('/')
@@ -329,10 +329,12 @@ export function useUIStream(options: UseUIStreamOptions): UseUIStreamReturn {
     }
   }
 
-  // Cleanup on unmount
-  onUnmounted(() => {
-    abortController.value?.abort()
-  })
+  // Cleanup on unmount when called inside setup
+  if (getCurrentInstance()) {
+    onUnmounted(() => {
+      abortController.value?.abort()
+    })
+  }
 
   return {
     spec,
