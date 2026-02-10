@@ -22,7 +22,9 @@
       "Bash(pnpm lint:fix:*)",
       "Bash(pnpm build:*)",
       "Bash(pnpm changeset:*)",
-      "Bash(pnpm --version:*)"
+      "Bash(pnpm --version:*)",
+      "Bash(git tag:*)",
+      "Bash(git push:*)"
     ]
   }
 }
