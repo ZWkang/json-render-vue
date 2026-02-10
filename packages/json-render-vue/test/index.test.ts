@@ -42,7 +42,15 @@ describe('renderer component', () => {
     }))
 
     const registry = { Text: TextComponent }
-    const spec = { type: 'Text', props: { content: 'Hello World' } }
+    const spec = {
+      root: 'text1',
+      elements: {
+        text1: {
+          type: 'Text',
+          props: { content: 'Hello World' },
+        },
+      },
+    }
 
     const wrapper = mount(Renderer, {
       props: { spec, registry },
@@ -68,11 +76,21 @@ describe('renderer component', () => {
 
     const registry = { Card, Text }
     const spec = {
-      type: 'Card',
-      children: [
-        { type: 'Text', props: { content: 'Child 1' } },
-        { type: 'Text', props: { content: 'Child 2' } },
-      ],
+      root: 'card1',
+      elements: {
+        card1: {
+          type: 'Card',
+          children: ['text1', 'text2'],
+        },
+        text1: {
+          type: 'Text',
+          props: { content: 'Child 1' },
+        },
+        text2: {
+          type: 'Text',
+          props: { content: 'Child 2' },
+        },
+      },
     }
 
     const wrapper = mount(Renderer, {
@@ -92,7 +110,14 @@ describe('renderer component', () => {
     }))
 
     const registry = {}
-    const spec = { type: 'UnknownComponent' }
+    const spec = {
+      root: 'unknown1',
+      elements: {
+        unknown1: {
+          type: 'UnknownComponent',
+        },
+      },
+    }
 
     const wrapper = mount(Renderer, {
       props: { spec, registry, fallback: Fallback },

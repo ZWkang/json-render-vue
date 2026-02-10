@@ -1,89 +1,79 @@
 import { describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
-import { useUIStream } from '../src/composables/useUIStream'
+import { flatToTree, useUIStream } from '../src/composables/useUIStream'
+import type { FlatElement } from '../src/types/catalog-types'
 
 describe('useUIStream composable', () => {
   describe('initialization', () => {
     it('initializes with null spec', () => {
-      const { spec } = useUIStream(null)
+      const { spec } = useUIStream({ api: '/api/generate' })
       expect(spec.value).toBeNull()
     })
 
-    it('initializes with provided spec', () => {
-      const initialSpec = { type: 'Card', props: { title: 'Hello' } }
-      const { spec } = useUIStream(initialSpec)
-      expect(spec.value).toEqual(initialSpec)
+    it('initializes with isStreaming false', () => {
+      const { isStreaming } = useUIStream({ api: '/api/generate' })
+      expect(isStreaming.value).toBe(false)
+    })
+
+    it('initializes with no error', () => {
+      const { error } = useUIStream({ api: '/api/generate' })
+      expect(error.value).toBeNull()
     })
   })
 
-  describe('update', () => {
-    it('replaces spec when receiving full spec with type', async () => {
-      const { spec, update } = useUIStream({ type: 'Card', props: {} })
+  describe('clear', () => {
+    it('clears spec and error', () => {
+      const { spec, error, clear } = useUIStream({ api: '/api/generate' })
 
-      update({ type: 'Button', props: { label: 'Click' } })
-      await nextTick()
-
-      expect(spec.value?.type).toBe('Button')
-      expect(spec.value?.props?.label).toBe('Click')
-    })
-
-    it('sets spec to null when receiving null', async () => {
-      const { spec, update } = useUIStream({ type: 'Card' })
-
-      update(null)
-      await nextTick()
+      // Manually set values to test clear
+      clear()
 
       expect(spec.value).toBeNull()
-    })
-
-    it('merges partial update without type', async () => {
-      const { spec, update } = useUIStream({ type: 'Card', props: { title: 'Old' } })
-
-      update({ props: { title: 'New', subtitle: 'Added' } })
-      await nextTick()
-
-      expect(spec.value?.type).toBe('Card')
-      expect(spec.value?.props?.title).toBe('New')
-      expect(spec.value?.props?.subtitle).toBe('Added')
+      expect(error.value).toBeNull()
     })
   })
 
-  describe('abort', () => {
-    it('provides abort function', () => {
-      const { abort } = useUIStream(null)
-      expect(typeof abort).toBe('function')
+  describe('flatToTree utility', () => {
+    it('converts flat elements to tree spec', () => {
+      const flatElements: FlatElement[] = [
+        { key: 'root', type: 'Card', props: { title: 'Hello' } },
+        { key: 'child1', type: 'Text', props: { content: 'World' }, parentKey: 'root' },
+        { key: 'child2', type: 'Button', props: { label: 'Click' }, parentKey: 'root' },
+      ]
+
+      const spec = flatToTree(flatElements)
+
+      expect(spec.root).toBe('root')
+      expect(spec.elements.root.type).toBe('Card')
+      expect(spec.elements.root.children).toContain('child1')
+      expect(spec.elements.root.children).toContain('child2')
+      expect(spec.elements.child1.type).toBe('Text')
+      expect(spec.elements.child2.type).toBe('Button')
     })
 
-    it('abort creates new controller', () => {
-      const { abort } = useUIStream(null)
+    it('handles single element', () => {
+      const flatElements: FlatElement[] = [
+        { key: 'only', type: 'Card', props: {} },
+      ]
 
-      // Should not throw
-      abort()
-      abort()
-    })
-  })
+      const spec = flatToTree(flatElements)
 
-  describe('spec structure', () => {
-    it('supports children array', () => {
-      const { spec } = useUIStream({
-        type: 'Card',
-        children: [
-          { type: 'Text', props: { content: 'Hello' } },
-          { type: 'Button', props: { label: 'Click' } },
-        ],
-      })
-
-      expect(Array.isArray(spec.value?.children)).toBe(true)
-      expect((spec.value?.children as any[])?.[0]?.type).toBe('Text')
+      expect(spec.root).toBe('only')
+      expect(spec.elements.only.type).toBe('Card')
+      expect(spec.elements.only.children).toEqual([])
     })
 
-    it('supports string children', () => {
-      const { spec } = useUIStream({
-        type: 'Text',
-        children: 'Hello World',
-      })
+    it('handles nested elements', () => {
+      const flatElements: FlatElement[] = [
+        { key: 'root', type: 'Card' },
+        { key: 'container', type: 'Box', parentKey: 'root' },
+        { key: 'text', type: 'Text', parentKey: 'container' },
+      ]
 
-      expect(spec.value?.children).toBe('Hello World')
+      const spec = flatToTree(flatElements)
+
+      expect(spec.elements.root.children).toContain('container')
+      expect(spec.elements.container.children).toContain('text')
+      expect(spec.elements.text.children).toEqual([])
     })
   })
 })

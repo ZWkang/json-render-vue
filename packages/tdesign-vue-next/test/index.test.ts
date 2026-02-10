@@ -1,5 +1,5 @@
 import { assert, it } from 'vitest'
-import { tdesignRegistry, tdesignCatalog } from '../src'
+import { tdesignCatalog, tdesignRegistry } from '../src'
 
 it('exports registry and catalog', () => {
   assert.ok(tdesignRegistry)

@@ -134,10 +134,10 @@ const spec = {
 
 ```ts
 import {
+  useActions,
   useData,
   useDataBinding,
   useDataValue,
-  useActions,
   useValidation,
   useVisibility
 } from 'json-render-vue'
@@ -173,7 +173,7 @@ const email = useDataValue('user.email')
 Create custom registries by mapping type names to Vue components:
 
 ```ts
-import { Card, Button, Input } from 'your-ui-library'
+import { Button, Card, Input } from 'your-ui-library'
 
 const customRegistry: Record<string, Component> = {
   Card,

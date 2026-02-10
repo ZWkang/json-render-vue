@@ -135,10 +135,10 @@ const spec = {
 
 ```ts
 import {
+  useActions,
   useData,
   useDataBinding,
   useDataValue,
-  useActions,
   useValidation,
   useVisibility
 } from 'json-render-vue'
@@ -174,7 +174,7 @@ const email = useDataValue('user.email')
 通过将类型名称映射到 Vue 组件来创建自定义注册表：
 
 ```ts
-import { Card, Button, Input } from 'your-ui-library'
+import { Button, Card, Input } from 'your-ui-library'
 
 const customRegistry: Record<string, Component> = {
   Card,

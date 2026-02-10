@@ -140,8 +140,8 @@ Provide type hints for slot props. Available in Vue 3.3+.
 
 ```ts
 const slots = defineSlots<{
-  default(props: { item: string; index: number }): any
-  header(props: { title: string }): any
+  default: (props: { item: string; index: number }) => any
+  header: (props: { title: string }) => any
 }>()
 ```
 
@@ -174,12 +174,12 @@ defineProps<{
 Use `vNameOfDirective` naming convention.
 
 ```ts
+// Or import and rename
+import { myDirective as vMyDirective } from './directives'
+
 const vFocus = {
   mounted: (el: HTMLElement) => el.focus()
 }
-
-// Or import and rename
-import { myDirective as vMyDirective } from './directives'
 ```
 
 ```vue

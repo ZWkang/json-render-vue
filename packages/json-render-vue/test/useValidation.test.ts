@@ -4,11 +4,11 @@ import { mount } from '@vue/test-utils'
 import { provideData } from '../src/composables/useData'
 import { provideValidation, useValidation, useValidationError } from '../src/composables/useValidation'
 
-function createValidationTestComponent(data: Record<string, any>, childSetup: () => any) {
+function createValidationTestComponent(data: Record<string, unknown>, childSetup: () => unknown) {
   return defineComponent({
     setup() {
-      const dataStore = provideData(data)
-      provideValidation(dataStore)
+      const dataCtx = provideData({ initialState: data })
+      provideValidation(dataCtx.state)
       return () => h(defineComponent({
         setup: childSetup,
         render: () => null,
@@ -20,7 +20,7 @@ function createValidationTestComponent(data: Record<string, any>, childSetup: ()
 describe('useValidation composable', () => {
   describe('provideValidation and useValidation', () => {
     it('provides and injects validation context', () => {
-      let ctx: any
+      let ctx: ReturnType<typeof useValidation> | undefined
 
       const TestComponent = createValidationTestComponent(
         {},
@@ -32,9 +32,9 @@ describe('useValidation composable', () => {
 
       mount(TestComponent)
       expect(ctx).toBeDefined()
-      expect(ctx.register).toBeDefined()
-      expect(ctx.validateAll).toBeDefined()
-      expect(ctx.clearErrors).toBeDefined()
+      expect(ctx!.register).toBeDefined()
+      expect(ctx!.validateAll).toBeDefined()
+      expect(ctx!.clearErrors).toBeDefined()
     })
 
     it('throws when useValidation called without provider', () => {
@@ -51,48 +51,48 @@ describe('useValidation composable', () => {
 
   describe('register and validateAll', () => {
     it('registers validator and runs on validateAll', () => {
-      let ctx: any
+      let ctx: ReturnType<typeof useValidation> | undefined
 
       const TestComponent = createValidationTestComponent(
         { name: '' },
         () => {
           ctx = useValidation()
-          ctx.register('name', (value: any) => value ? null : 'Name is required')
+          ctx.register('name', (value: unknown) => value ? null : 'Name is required')
           return {}
         },
       )
 
       mount(TestComponent)
-      const isValid = ctx.validateAll()
+      const isValid = ctx!.validateAll()
 
       expect(isValid).toBe(false)
-      expect(ctx.errors.value.name).toBe('Name is required')
+      expect(ctx!.errors.value.name).toBe('Name is required')
     })
 
     it('returns true when all validations pass', () => {
-      let ctx: any
+      let ctx: ReturnType<typeof useValidation> | undefined
 
       const TestComponent = createValidationTestComponent(
         { name: 'John', email: 'john@example.com' },
         () => {
           ctx = useValidation()
-          ctx.register('name', (value: any) => value ? null : 'Required')
-          ctx.register('email', (value: any) => value.includes('@') ? null : 'Invalid email')
+          ctx.register('name', (value: unknown) => value ? null : 'Required')
+          ctx.register('email', (value: unknown) => String(value).includes('@') ? null : 'Invalid email')
           return {}
         },
       )
 
       mount(TestComponent)
-      const isValid = ctx.validateAll()
+      const isValid = ctx!.validateAll()
 
       expect(isValid).toBe(true)
-      expect(ctx.errors.value.name).toBeNull()
-      expect(ctx.errors.value.email).toBeNull()
+      expect(ctx!.errors.value.name).toBeNull()
+      expect(ctx!.errors.value.email).toBeNull()
     })
 
     it('unregister function removes validator', () => {
-      let ctx: any
-      let unregister: () => void
+      let ctx: ReturnType<typeof useValidation> | undefined
+      let unregister: (() => void) | undefined
 
       const TestComponent = createValidationTestComponent(
         { name: '' },
@@ -105,16 +105,16 @@ describe('useValidation composable', () => {
 
       mount(TestComponent)
       unregister!()
-      const isValid = ctx.validateAll()
+      const isValid = ctx!.validateAll()
 
       expect(isValid).toBe(true)
-      expect(ctx.errors.value.name).toBeUndefined()
+      expect(ctx!.errors.value.name).toBeUndefined()
     })
   })
 
   describe('clearErrors', () => {
     it('clears all errors', () => {
-      let ctx: any
+      let ctx: ReturnType<typeof useValidation> | undefined
 
       const TestComponent = createValidationTestComponent(
         { name: '' },
@@ -126,23 +126,23 @@ describe('useValidation composable', () => {
       )
 
       mount(TestComponent)
-      ctx.validateAll()
-      expect(ctx.errors.value.name).toBe('Error')
+      ctx!.validateAll()
+      expect(ctx!.errors.value.name).toBe('Error')
 
-      ctx.clearErrors()
-      expect(ctx.errors.value).toEqual({})
+      ctx!.clearErrors()
+      expect(ctx!.errors.value).toEqual({})
     })
   })
 
   describe('useValidationError', () => {
     it('returns computed error for specific path', () => {
-      let error: any
+      let error: ReturnType<typeof useValidationError> | undefined
 
       const TestComponent = createValidationTestComponent(
         { email: 'invalid' },
         () => {
           const ctx = useValidation()
-          ctx.register('email', (v: string) => v.includes('@') ? null : 'Invalid email')
+          ctx.register('email', (v: unknown) => String(v).includes('@') ? null : 'Invalid email')
           error = useValidationError('email')
           ctx.validateAll()
           return {}
@@ -150,17 +150,17 @@ describe('useValidation composable', () => {
       )
 
       mount(TestComponent)
-      expect(error.value).toBe('Invalid email')
+      expect(error!.value).toBe('Invalid email')
     })
 
     it('returns null for paths without errors', () => {
-      let error: any
+      let error: ReturnType<typeof useValidationError> | undefined
 
       const TestComponent = createValidationTestComponent(
         { email: 'test@example.com' },
         () => {
           const ctx = useValidation()
-          ctx.register('email', (v: string) => v.includes('@') ? null : 'Invalid')
+          ctx.register('email', (v: unknown) => String(v).includes('@') ? null : 'Invalid')
           error = useValidationError('email')
           ctx.validateAll()
           return {}
@@ -168,7 +168,7 @@ describe('useValidation composable', () => {
       )
 
       mount(TestComponent)
-      expect(error.value).toBeNull()
+      expect(error!.value).toBeNull()
     })
   })
 })

@@ -27,7 +27,7 @@ data.value = { items: ['new'] }  // Triggers reactivity
 ### computed
 
 ```ts
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const count = ref(0)
 
@@ -93,7 +93,7 @@ watch(source, callback, { once: true })
 Runs immediately and auto-tracks dependencies.
 
 ```ts
-import { ref, watchEffect, onWatcherCleanup } from 'vue'
+import { onWatcherCleanup, ref, watchEffect } from 'vue'
 
 const id = ref(1)
 
@@ -193,7 +193,7 @@ Composables are functions that encapsulate stateful logic using Composition API.
 
 ```ts
 // composables/useMouse.ts
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 export function useMouse() {
   const x = ref(0)
@@ -216,7 +216,7 @@ export function useMouse() {
 Use `toValue()` (Vue 3.3+) to normalize refs, getters, or plain values.
 
 ```ts
-import { ref, watchEffect, toValue, type MaybeRefOrGetter } from 'vue'
+import { type MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue'
 
 export function useFetch(url: MaybeRefOrGetter<string>) {
   const data = ref(null)

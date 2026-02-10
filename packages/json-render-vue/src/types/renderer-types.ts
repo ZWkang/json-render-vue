@@ -1,7 +1,7 @@
 import type { Component } from 'vue'
-import type { Spec } from './catalog-types'
 import type { JsonRenderData } from '../composables/useData'
 import type { ProvideActionsConfig } from '../composables/useActions'
+import type { Spec } from './catalog-types'
 
 /**
  * Props for the Renderer component.

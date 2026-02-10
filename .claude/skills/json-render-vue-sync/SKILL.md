@@ -301,7 +301,7 @@ export function useStateContext() {
 
 **Vue 转换 (composables/useData.ts):**
 ```typescript
-import { provide, inject, ref, type Ref, type InjectionKey } from 'vue'
+import { type InjectionKey, type Ref, inject, provide, ref } from 'vue'
 
 const DATA_KEY: InjectionKey<Ref<Record<string, unknown>>> = Symbol('data')
 

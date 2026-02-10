@@ -71,14 +71,14 @@ onMounted(() => {
 
 ```ts
 // Reactivity
-import { ref, shallowRef, computed, reactive, readonly, toRef, toRefs, toValue } from 'vue'
+import { computed, reactive, readonly, ref, shallowRef, toRef, toRefs, toValue } from 'vue'
 
 // Watchers
-import { watch, watchEffect, watchPostEffect, onWatcherCleanup } from 'vue'
+import { onWatcherCleanup, watch, watchEffect, watchPostEffect } from 'vue'
 
 // Lifecycle
-import { onMounted, onUpdated, onUnmounted, onBeforeMount, onBeforeUpdate, onBeforeUnmount } from 'vue'
+import { onBeforeMount, onBeforeUnmount, onBeforeUpdate, onMounted, onUnmounted, onUpdated } from 'vue'
 
 // Utilities
-import { nextTick, defineComponent, defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, defineComponent, nextTick } from 'vue'
 ```

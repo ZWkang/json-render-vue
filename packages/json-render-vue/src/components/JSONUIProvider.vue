@@ -2,7 +2,7 @@
 import { provideActions } from '../composables/useActions'
 import type { ProvideActionsConfig } from '../composables/useActions'
 import { provideData } from '../composables/useData'
-import type { JsonRenderData } from '../composables/useData'
+import type { JsonRenderData, AuthState } from '../composables/useData'
 import { provideValidation } from '../composables/useValidation'
 import ConfirmDialog from './ConfirmDialog.vue'
 
@@ -10,13 +10,20 @@ defineOptions({ name: 'JSONUIProvider' })
 
 const props = defineProps<{
   data?: JsonRenderData
+  initialState?: JsonRenderData
+  authState?: AuthState
   actionConfig?: ProvideActionsConfig
-  validationConfig?: unknown
+  onStateChange?: (path: string, value: unknown) => void
 }>()
 
-const dataStore = provideData(props.data ?? {})
+// Use new API with full options
+const dataCtx = provideData({
+  initialState: props.initialState ?? props.data ?? {},
+  authState: props.authState,
+  onStateChange: props.onStateChange,
+})
 provideActions(props.actionConfig)
-provideValidation(dataStore)
+provideValidation(dataCtx.state)
 </script>
 
 <template>

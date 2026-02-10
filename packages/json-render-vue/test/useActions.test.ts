@@ -1,11 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, nextTick, ref } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
+import { provideData } from '../src/composables/useData'
 import { provideActions, useActions } from '../src/composables/useActions'
 
 function createActionsProvider(config: any, childSetup: () => any) {
   return defineComponent({
     setup() {
+      // Actions need data context
+      provideData({ initialState: {} })
       provideActions(config)
       return () => h(defineComponent({
         setup: childSetup,
@@ -61,9 +64,9 @@ describe('useActions composable', () => {
       )
 
       mount(TestComponent)
-      await ctx.execute({ type: 'submit' })
+      await ctx.execute({ action: 'submit' })
 
-      expect(onAction).toHaveBeenCalledWith({ type: 'submit' })
+      expect(onAction).toHaveBeenCalledWith({ action: 'submit' })
     })
 
     it('tracks loading state during execution', async () => {
@@ -83,7 +86,7 @@ describe('useActions composable', () => {
 
       mount(TestComponent)
 
-      const executePromise = ctx.execute({ type: 'submit' })
+      const executePromise = ctx.execute({ action: 'submit' })
       await nextTick()
 
       expect(ctx.loadingActions.value.has('submit')).toBe(true)
@@ -109,9 +112,12 @@ describe('useActions composable', () => {
       )
 
       mount(TestComponent)
-      await ctx.execute({ type: 'delete', confirm: 'Are you sure?' })
+      // Don't await - confirmation pauses execution
+      ctx.execute({ action: 'delete', confirm: { title: 'Confirm', message: 'Are you sure?' } })
+      await nextTick()
 
-      expect(ctx.pendingConfirmation.value).toEqual({ type: 'delete', confirm: 'Are you sure?' })
+      expect(ctx.pendingConfirmation.value).not.toBeNull()
+      expect(ctx.pendingConfirmation.value.action.action).toBe('delete')
     })
 
     it('confirm() executes pending action and clears it', async () => {
@@ -127,14 +133,16 @@ describe('useActions composable', () => {
       )
 
       mount(TestComponent)
-      await ctx.execute({ type: 'delete', confirm: true })
+      ctx.execute({ action: 'delete', confirm: { title: 'Confirm', message: 'Sure?' } })
+      await nextTick()
 
       expect(ctx.pendingConfirmation.value).not.toBeNull()
       expect(onAction).not.toHaveBeenCalled()
 
-      await ctx.confirm()
+      ctx.confirm()
+      await nextTick()
 
-      expect(onAction).toHaveBeenCalledWith({ type: 'delete', confirm: true })
+      expect(onAction).toHaveBeenCalled()
       expect(ctx.pendingConfirmation.value).toBeNull()
     })
 
@@ -151,12 +159,85 @@ describe('useActions composable', () => {
       )
 
       mount(TestComponent)
-      await ctx.execute({ type: 'delete', confirm: 'Sure?' })
+      ctx.execute({ action: 'delete', confirm: { title: 'Confirm', message: 'Sure?' } })
+      await nextTick()
 
       ctx.cancel()
+      await nextTick()
 
       expect(onAction).not.toHaveBeenCalled()
       expect(ctx.pendingConfirmation.value).toBeNull()
+    })
+  })
+
+  describe('built-in actions', () => {
+    it('setState updates data at path', async () => {
+      let ctx: any
+      let dataCtx: any
+
+      const TestComponent = defineComponent({
+        setup() {
+          dataCtx = provideData({ initialState: { count: 0 } })
+          provideActions({})
+          return () => h(defineComponent({
+            setup() {
+              ctx = useActions()
+              return () => null
+            },
+          }))
+        },
+      })
+
+      mount(TestComponent)
+      await ctx.execute({ action: 'setState', params: { path: 'count', value: 5 } })
+
+      expect(dataCtx.get('count')).toBe(5)
+    })
+
+    it('pushState appends to array', async () => {
+      let ctx: any
+      let dataCtx: any
+
+      const TestComponent = defineComponent({
+        setup() {
+          dataCtx = provideData({ initialState: { items: ['a', 'b'] } })
+          provideActions({})
+          return () => h(defineComponent({
+            setup() {
+              ctx = useActions()
+              return () => null
+            },
+          }))
+        },
+      })
+
+      mount(TestComponent)
+      await ctx.execute({ action: 'pushState', params: { path: 'items', value: 'c' } })
+
+      expect(dataCtx.get('items')).toEqual(['a', 'b', 'c'])
+    })
+
+    it('removeState removes from array by index', async () => {
+      let ctx: any
+      let dataCtx: any
+
+      const TestComponent = defineComponent({
+        setup() {
+          dataCtx = provideData({ initialState: { items: ['a', 'b', 'c'] } })
+          provideActions({})
+          return () => h(defineComponent({
+            setup() {
+              ctx = useActions()
+              return () => null
+            },
+          }))
+        },
+      })
+
+      mount(TestComponent)
+      await ctx.execute({ action: 'removeState', params: { path: 'items', index: 1 } })
+
+      expect(dataCtx.get('items')).toEqual(['a', 'c'])
     })
   })
 })

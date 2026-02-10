@@ -10,6 +10,11 @@ defineProps<RendererProps>()
 
 <template>
   <JSONUIProvider :data="data ?? undefined" :action-config="actionConfig">
-    <ElementRenderer :element="spec" :registry="registry" :fallback="fallback" />
+    <ElementRenderer
+      :spec="spec"
+      :element-key="spec?.root"
+      :registry="registry"
+      :fallback="fallback"
+    />
   </JSONUIProvider>
 </template>
