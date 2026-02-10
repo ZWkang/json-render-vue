@@ -24,7 +24,8 @@
       "Bash(pnpm changeset:*)",
       "Bash(pnpm --version:*)",
       "Bash(git tag:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(pnpm lint:*)"
     ]
   }
 }

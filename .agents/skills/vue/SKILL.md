@@ -70,15 +70,27 @@ onMounted(() => {
 ### Key Imports
 
 ```ts
-// Reactivity
-import { computed, reactive, readonly, ref, shallowRef, toRef, toRefs, toValue } from 'vue'
-
-// Watchers
-import { onWatcherCleanup, watch, watchEffect, watchPostEffect } from 'vue'
-
-// Lifecycle
-import { onBeforeMount, onBeforeUnmount, onBeforeUpdate, onMounted, onUnmounted, onUpdated } from 'vue'
-
-// Utilities
-import { defineAsyncComponent, defineComponent, nextTick } from 'vue'
+import {
+  computed,
+  defineAsyncComponent,
+  defineComponent,
+  nextTick,
+  onBeforeMount,
+  onBeforeUnmount,
+  onBeforeUpdate,
+  onMounted,
+  onUnmounted,
+  onUpdated,
+  onWatcherCleanup,
+  reactive,
+  readonly,
+  ref,
+  shallowRef,
+  toRef,
+  toRefs,
+  toValue,
+  watch,
+  watchEffect,
+  watchPostEffect,
+} from 'vue'
 ```

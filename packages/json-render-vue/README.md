@@ -281,7 +281,7 @@ import { useFieldValidation } from 'json-render-vue'
 
 const emailValidation = useFieldValidation('form.email', (value) => {
   if (!value) return 'Email is required'
-  if (!/\S+@\S+\.\S+/.test(value)) return 'Invalid email format'
+  if (!/\S[^\s@]*@\S+\.\S+/.test(value)) return 'Invalid email format'
   return null
 })
 
@@ -402,7 +402,8 @@ await send('Create a login form', { theme: 'dark' })
 
 ### TDesign Vue Next
 
-```typescript
+```vue
+<script setup lang="ts">
 import { tdesignRegistry } from '@zwkang-dev/json-render-tdesign-vue-next'
 
 const spec = {
@@ -417,8 +418,11 @@ const spec = {
     },
   },
 }
+</script>
 
-<Renderer :spec="spec" :registry="tdesignRegistry" />
+<template>
+  <Renderer :spec="spec" :registry="tdesignRegistry" />
+</template>
 ```
 
 ### Custom Components
@@ -505,13 +509,13 @@ Full TypeScript support with comprehensive type definitions:
 
 ```typescript
 import type {
+  ActionBinding,
+  AuthState,
+  JsonRenderData,
+  RepeatConfig,
   Spec,
   UIElement,
-  ActionBinding,
   VisibilityCondition,
-  RepeatConfig,
-  JsonRenderData,
-  AuthState,
 } from 'json-render-vue'
 ```
 

@@ -129,16 +129,16 @@ watchPostEffect(() => {})  // Alias for flush: 'post'
 
 ```ts
 import {
-  onBeforeMount,
-  onMounted,
-  onBeforeUpdate,
-  onUpdated,
-  onBeforeUnmount,
-  onUnmounted,
-  onErrorCaptured,
   onActivated,      // KeepAlive
+  onBeforeMount,
+  onBeforeUnmount,
+  onBeforeUpdate,
   onDeactivated,    // KeepAlive
-  onServerPrefetch  // SSR only
+  onErrorCaptured,
+  onMounted,
+  onServerPrefetch, // SSR only
+  onUnmounted,
+  onUpdated,
 } from 'vue'
 
 onMounted(() => {
