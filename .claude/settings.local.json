@@ -20,7 +20,8 @@
       "Bash(git clone:*)",
       "Bash(pnpm typecheck:*)",
       "Bash(pnpm lint:fix:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(pnpm changeset:*)"
     ]
   }
 }

@@ -14,20 +14,21 @@
     "url": "git+https://github.com/ZWkang/json-render-vue.git"
   },
   "bugs": "https://github.com/ZWkang/json-render-vue/issues",
-  "keywords": ["vue", "json-render", "ui-framework"],
+  "keywords": [
+    "vue",
+    "json-render",
+    "ui-framework"
+  ],
   "scripts": {
-    "dev": "pnpm -r --filter=./packages/** run build",
+    "dev": "pnpm -r --filter=./packages/** run dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "pnpm -r --filter=./packages/** run test",
     "build": "pnpm -r --filter=./packages/** run build",
-    "start": "pnpm -r --filter=./packages/** run start",
-    "release": "bumpp -r --all",
-    "bump:version": "bumpp",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build",
-    "publish:all": "pnpm -r publish --access public --no-git-checks",
-    "update:deps": "taze "
+    "typecheck": "pnpm -r --filter=./packages/** run typecheck",
+    "release": "bumpp -r --commit --push --tag --all && git push --follow-tags",
+    "publish:ci": "pnpm -r publish --access public --no-git-checks",
+    "update:deps": "taze major -lr"
   },
   "dependencies": {
     "@json-render/core": "^0.4.0",
