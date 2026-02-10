@@ -1,6 +1,6 @@
 # @zwkang-dev/json-render-tdesign-vue-next
 
-TDesign Vue Next components for json-render-vue framework.
+TDesign Vue Next components for the json-render-vue framework.
 
 ## Installation
 
@@ -12,15 +12,14 @@ pnpm add @zwkang-dev/json-render-tdesign-vue-next tdesign-vue-next
 
 ```vue
 <script setup lang="ts">
-import { Renderer, JSONUIProvider } from 'json-render-vue'
-import { tdesignRegistry, tdesignCatalog } from '@zwkang-dev/json-render-tdesign-vue-next'
+import { Renderer } from 'json-render-vue'
+import { tdesignRegistry } from '@zwkang-dev/json-render-tdesign-vue-next'
 import 'tdesign-vue-next/es/style/index.css'
 
-const tree = {
+const spec = {
   root: 'card-1',
   elements: {
     'card-1': {
-      key: 'card-1',
       type: 'Card',
       props: {
         title: 'Welcome',
@@ -29,42 +28,40 @@ const tree = {
       children: ['button-1', 'input-1'],
     },
     'button-1': {
-      key: 'button-1',
       type: 'Button',
       props: {
         label: 'Click Me',
         theme: 'primary',
         action: 'handleClick',
       },
-      children: [],
     },
     'input-1': {
-      key: 'input-1',
       type: 'Input',
       props: {
         label: 'Username',
-        valuePath: '/username',
+        valuePath: 'username',
         placeholder: 'Enter your username',
       },
-      children: [],
     },
   },
 }
 
-const actionHandlers = {
-  handleClick: async () => {
-    console.log('Button clicked!')
+const actionConfig = {
+  handlers: {
+    handleClick: async () => {
+      console.log('Button clicked!')
+    },
   },
 }
 </script>
 
 <template>
-  <JSONUIProvider
-    :initial-data="{ username: '' }"
-    :action-handlers="actionHandlers"
-  >
-    <Renderer :tree="tree" :registry="tdesignRegistry" />
-  </JSONUIProvider>
+  <Renderer
+    :spec="spec"
+    :registry="tdesignRegistry"
+    :data="{ username: '' }"
+    :action-config="actionConfig"
+  />
 </template>
 ```
 
@@ -97,7 +94,7 @@ const actionHandlers = {
 Use the `tdesignCatalog` to generate AI prompts:
 
 ```typescript
-import { generateCatalogPrompt } from 'json-render-vue'
+import { generateCatalogPrompt } from '@json-render/core'
 import { tdesignCatalog } from '@zwkang-dev/json-render-tdesign-vue-next'
 
 const prompt = generateCatalogPrompt(tdesignCatalog)
@@ -107,4 +104,3 @@ console.log(prompt)
 ## LICENSE
 
 [MIT](./LICENSE) License © 2022 [zwkang](https://github.com/zwkang)
-

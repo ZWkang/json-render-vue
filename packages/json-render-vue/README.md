@@ -196,8 +196,12 @@ ctx.update({
 ```
 
 Supports dynamic value resolution:
-- `"$id"` → generates unique ID
-- `{ "path": "/statePath" }` → reads from state
+- `"$id"` -> generates unique ID
+- `{ "path": "form.title" }` -> reads from state by path
+
+Path format notes:
+- Dot/bracket path is supported (for example: `user.name`, `todos[0].title`)
+- JSON Pointer is also supported (for example: `/user/name`, `/todos/0/title`)
 
 #### 3. removeState - Remove from array by index
 
