@@ -54,29 +54,48 @@ import { Renderer } from 'json-render-vue'
 import { tdesignRegistry } from '@zwkang-dev/json-render-tdesign-vue-next'
 
 const spec = {
-  type: 'Card',
-  props: { title: 'Hello World' },
-  children: [
-    {
-      type: 'Input',
-      props: { placeholder: 'Enter your name' },
-      bindData: 'user.name'
+  root: 'card-1',
+  elements: {
+    'card-1': {
+      type: 'Card',
+      props: { title: 'Hello World' },
+      children: ['input-1', 'button-1'],
     },
-    {
+    'input-1': {
+      type: 'Input',
+      props: {
+        label: 'Name',
+        valuePath: 'user.name',
+        placeholder: 'Enter your name',
+      },
+    },
+    'button-1': {
       type: 'Button',
-      props: { theme: 'primary' },
-      children: 'Submit'
-    }
-  ]
+      props: { label: 'Submit', theme: 'primary', action: 'submit' },
+    },
+  },
 }
 
 const data = {
-  user: { name: '' }
+  user: { name: '' },
+}
+
+const actionConfig = {
+  handlers: {
+    submit: async () => {
+      console.log('submit')
+    },
+  },
 }
 </script>
 
 <template>
-  <Renderer :spec="spec" :registry="tdesignRegistry" :data="data" />
+  <Renderer
+    :spec="spec"
+    :registry="tdesignRegistry"
+    :data="data"
+    :action-config="actionConfig"
+  />
 </template>
 ```
 
@@ -100,23 +119,36 @@ const data = {
 ### JSON Spec Structure
 
 ```ts
-interface ElementSpec {
-  type: string              // Component type name
-  props?: object            // Props passed to component
-  children?: ElementSpec[]  // Nested elements
-  bindData?: string         // Two-way data binding path
-  visible?: string          // Visibility condition
+interface Spec {
+  root: string
+  elements: Record<string, UIElement>
+}
+
+interface UIElement {
+  type: string
+  props?: Record<string, unknown>
+  children?: string[]
+  visible?: VisibilityCondition
+  on?: Record<string, ActionBinding | ActionBinding[]>
+  repeat?: { path: string; key?: string }
 }
 ```
 
 ### Data Binding
 
-Use `bindData` for two-way binding with path syntax:
+Use `props.valuePath` to bind component values (for example in Input):
 
 ```js
 const spec = {
-  type: 'Input',
-  bindData: 'form.email'  // Binds to data.form.email
+  root: 'input-1',
+  elements: {
+    'input-1': {
+      type: 'Input',
+      props: {
+        valuePath: 'form.email',
+      },
+    },
+  },
 }
 ```
 
@@ -125,6 +157,7 @@ const spec = {
 | Dot notation | `user.name` | Access nested properties |
 | Array index | `items[0].id` | Access array elements |
 | Bracket notation | `data["key"]` | Access with string keys |
+| JSON Pointer | `/user/name` | Pointer-style path syntax |
 
 ---
 
@@ -137,33 +170,39 @@ import {
   useActions,
   useData,
   useDataBinding,
+  useDataContext,
   useDataValue,
+  useIsVisible,
   useValidation,
-  useVisibility
 } from 'json-render-vue'
 ```
 
 | Composable | Description |
 |------------|-------------|
-| `useData()` | Access shared data store |
+| `useData()` | Access shared data store (Ref) |
+| `useDataContext()` | Read/write data with get/set/update |
 | `useDataBinding(path)` | Two-way binding (WritableComputedRef) |
 | `useDataValue(path)` | Read-only computed value |
 | `useActions()` | Action handling system |
 | `useValidation()` | Form validation utilities |
-| `useVisibility()` | Conditional visibility |
+| `useIsVisible(condition)` | Conditional visibility |
 
 ### Example
 
 ```ts
 // In component setup
-const { data, setData, getData } = useData()
+const data = useData()
+const dataCtx = useDataContext()
 
 // Two-way binding
 const name = useDataBinding('user.name')
-name.value = 'John'  // Updates data.user.name
+name.value = 'John' // Updates data.value.user.name
 
 // Read-only
 const email = useDataValue('user.email')
+
+// Programmatic update
+dataCtx.set('user.role', 'admin')
 ```
 
 ---
@@ -245,5 +284,5 @@ Please make sure to:
 ---
 
 <p align="center">
-  <sub>Built with ❤️ for the Vue ecosystem</sub>
+  Made with ❤️ by <a href="https://github.com/ZWkang">zwkang</a>
 </p>
