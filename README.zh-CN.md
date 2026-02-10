@@ -55,29 +55,48 @@ import { Renderer } from 'json-render-vue'
 import { tdesignRegistry } from '@zwkang-dev/json-render-tdesign-vue-next'
 
 const spec = {
-  type: 'Card',
-  props: { title: 'Hello World' },
-  children: [
-    {
-      type: 'Input',
-      props: { placeholder: '请输入你的名字' },
-      bindData: 'user.name'
+  root: 'card-1',
+  elements: {
+    'card-1': {
+      type: 'Card',
+      props: { title: 'Hello World' },
+      children: ['input-1', 'button-1'],
     },
-    {
+    'input-1': {
+      type: 'Input',
+      props: {
+        label: '姓名',
+        valuePath: 'user.name',
+        placeholder: '请输入你的名字',
+      },
+    },
+    'button-1': {
       type: 'Button',
-      props: { theme: 'primary' },
-      children: '提交'
-    }
-  ]
+      props: { label: '提交', theme: 'primary', action: 'submit' },
+    },
+  },
 }
 
 const data = {
-  user: { name: '' }
+  user: { name: '' },
+}
+
+const actionConfig = {
+  handlers: {
+    submit: async () => {
+      console.log('submit')
+    },
+  },
 }
 </script>
 
 <template>
-  <Renderer :spec="spec" :registry="tdesignRegistry" :data="data" />
+  <Renderer
+    :spec="spec"
+    :registry="tdesignRegistry"
+    :data="data"
+    :action-config="actionConfig"
+  />
 </template>
 ```
 
@@ -101,23 +120,36 @@ const data = {
 ### JSON Spec 结构
 
 ```ts
-interface ElementSpec {
-  type: string              // 组件类型名称
-  props?: object            // 传递给组件的 props
-  children?: ElementSpec[]  // 嵌套元素
-  bindData?: string         // 双向数据绑定路径
-  visible?: string          // 可见性条件
+interface Spec {
+  root: string
+  elements: Record<string, UIElement>
+}
+
+interface UIElement {
+  type: string
+  props?: Record<string, unknown>
+  children?: string[]
+  visible?: VisibilityCondition
+  on?: Record<string, ActionBinding | ActionBinding[]>
+  repeat?: { path: string; key?: string }
 }
 ```
 
 ### 数据绑定
 
-使用 `bindData` 进行双向绑定，支持路径语法：
+通过组件的 `props.valuePath` 指定双向绑定路径（例如 Input 组件）：
 
 ```js
 const spec = {
-  type: 'Input',
-  bindData: 'form.email'  // 绑定到 data.form.email
+  root: 'input-1',
+  elements: {
+    'input-1': {
+      type: 'Input',
+      props: {
+        valuePath: 'form.email',
+      },
+    },
+  },
 }
 ```
 
@@ -126,6 +158,7 @@ const spec = {
 | 点号表示法 | `user.name` | 访问嵌套属性 |
 | 数组索引 | `items[0].id` | 访问数组元素 |
 | 方括号表示法 | `data["key"]` | 使用字符串键访问 |
+| JSON Pointer | `/user/name` | 指针路径表示法 |
 
 ---
 
@@ -138,33 +171,39 @@ import {
   useActions,
   useData,
   useDataBinding,
+  useDataContext,
   useDataValue,
+  useIsVisible,
   useValidation,
-  useVisibility
 } from 'json-render-vue'
 ```
 
 | Composable | 描述 |
 |------------|------|
-| `useData()` | 访问共享数据存储 |
+| `useData()` | 访问共享数据存储（Ref） |
+| `useDataContext()` | 使用 get/set/update 读写数据 |
 | `useDataBinding(path)` | 双向绑定（WritableComputedRef） |
 | `useDataValue(path)` | 只读计算值 |
 | `useActions()` | Action 处理系统 |
 | `useValidation()` | 表单验证工具 |
-| `useVisibility()` | 条件可见性 |
+| `useIsVisible(condition)` | 条件可见性 |
 
 ### 示例
 
 ```ts
 // 在组件 setup 中
-const { data, setData, getData } = useData()
+const data = useData()
+const dataCtx = useDataContext()
 
 // 双向绑定
 const name = useDataBinding('user.name')
-name.value = 'John'  // 更新 data.user.name
+name.value = 'John' // 更新 data.value.user.name
 
 // 只读
 const email = useDataValue('user.email')
+
+// 编程式更新
+dataCtx.set('user.role', 'admin')
 ```
 
 ---
